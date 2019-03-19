@@ -6,6 +6,7 @@ plugins {
     id 'net.ltgt.apt-idea' version '0.21'
 }
 
+ext.springBatchVersion = '4.1.1.RELEASE'
 ext.immutableVersion = '2.7.4'
 ext.logbackVersion = '1.2.3'
 ext.slf4jVersion = '1.7.26'
@@ -22,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.batch:spring-batch-core:4.1.1.RELEASE'
+    implementation("org.springframework.batch:spring-batch-core:${springBatchVersion}")
     implementation "org.immutables:value:${immutableVersion}"
     annotationProcessor "org.immutables:value:${immutableVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
@@ -37,6 +38,9 @@ dependencies {
 jar {
     def vendor = 'efindi'
     String[] packageArr = ['com', 'efindi', 'batch', 'commons']
+    from('LICENSE-2.0.txt') {
+        into 'META-INF'
+    }
     manifest {
         attributes(
                 'Name': String.join('/', packageArr).concat('/'),

@@ -56,7 +56,7 @@ class SequentialExecutionTaskletTest extends AbstractTaskletTest {
     void taskletVoidMethodWillThrowVoidMethodExecutionException() {
         ExecutionTasklet<VoidMethod> runnableExecutionTasklet = ImmutableSequentialExecutionTasklet
                 .<VoidMethod>builder()
-                .logConfig(ImmutableLogConfig.of(logger, "{}", true))
+                .logConfig(ImmutableLogConfig.of("Test throwing: {}", true))
                 .addTaskList(voidMethodTaskWithException)
                 .build();
         assertThrows(VoidMethodExecutionException.class, () -> runnableExecutionTasklet.execute(contribution, chunkContext));
