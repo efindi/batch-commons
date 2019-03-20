@@ -1,0 +1,150 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'idea'
+    id 'net.ltgt.apt-idea' version '0.21'
+}
+
+ext.springBatchVersion = '4.1.1.RELEASE'
+ext.immutableVersion = '2.7.4'
+ext.logbackVersion = '1.2.3'
+ext.slf4jVersion = '1.7.26'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def gitUrl = 'https://github.com/efindi/batch-commons'
+group 'com.efindi'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.springframework.batch:spring-batch-core:${springBatchVersion}")
+    implementation "org.immutables:value:${immutableVersion}"
+    annotationProcessor "org.immutables:value:${immutableVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.25.0'
+    testImplementation "ch.qos.logback:logback-core:${logbackVersion}"
+    testImplementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    testImplementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
+}
+
+jar {
+    def vendor = 'efindi'
+    String[] packageArr = ['com', 'efindi', 'batch', 'commons']
+    from('LICENSE-2.0.txt') {
+        into 'META-INF'
+    }
+    manifest {
+        attributes(
+                'Name': String.join('/', packageArr).concat('/'),
+                'Specification-Title': 'Spring Batch Commons',
+                'Specification-Version': '1',
+                'Specification-Vendor': vendor,
+                'Implementation-Title': String.join('.', packageArr),
+                'Implementation-Version': version,
+                'Implementation-Vendor': vendor,
+                'Created-By': System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+                'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}"
+        )
+    }
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = Project.getName()
+                description = "Efindi Batch Commons"
+                url = gitUrl
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = getDeveloperProperty('id')
+                        name = getDeveloperProperty('name')
+                        email = getDeveloperProperty('email')
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:efindi/batch-commons.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:efindi/batch-commons.git'
+                    url = gitUrl
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials(PasswordCredentials) {
+                username = getOssrhProperty('username')
+                password = getOssrhProperty('password')
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+def getOssrhProperty(String name) {
+    name = String.join('.', 'ossrh', name)
+    if (project.hasProperty(name)) {
+        return project.getProperties()[name]
+    } else {
+        return ''
+    }
+}
+
+def getDeveloperProperty(String name) {
+    name = String.join('.', 'developer', name)
+    if (project.hasProperty(name)) {
+        return project.getProperties()[name]
+    } else {
+        return ''
+    }
+}
