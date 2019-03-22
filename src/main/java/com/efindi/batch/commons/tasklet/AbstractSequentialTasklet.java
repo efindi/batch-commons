@@ -1,27 +1,34 @@
 package com.efindi.batch.commons.tasklet;
 
-import com.efindi.batch.commons.function.VoidMethodExecutionException;
+import com.efindi.batch.commons.style.DefaultStyle;
+import com.efindi.batch.commons.tasklet.function.VoidMethodExecutionException;
+import com.efindi.batch.commons.tasklet.task.ITask;
 import org.immutables.value.Value;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.repeat.RepeatStatus;
 
-/**
- * A tasklet that executes each task from a list with a pause (default to 1000ms).
- */
+import java.util.List;
+
 @Value.Immutable
-public abstract class SequentialExecutionTasklet<T> extends ExecutionTasklet<T> {
+@DefaultStyle
+public abstract class AbstractSequentialTasklet<T> extends AbstractExecutionTasklet<T> implements ListTasklet<T> {
+
+    @Override
+    @Value.Parameter
+    public abstract List<ITask<T>> tasks();
+
     @Value.Default
     public long pause() {
         return 1000;
     }
 
-    @Value.Derived
     @Override
+    @Value.Derived
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         try {
             if (pause() > 0) {
-                taskList().forEach(task -> {
+                tasks().forEach(task -> {
                     try {
                         this.run(task);
                         Thread.sleep(pause());
@@ -30,11 +37,14 @@ public abstract class SequentialExecutionTasklet<T> extends ExecutionTasklet<T> 
                     }
                 });
             } else {
-                taskList().forEach(this::run);
+                tasks().forEach(this::run);
             }
         } catch (VoidMethodExecutionException e) {
-            log(e); throw e;
+            if (propagateError()) {
+                throw e;
+            }
         }
         return RepeatStatus.FINISHED;
     }
+
 }
