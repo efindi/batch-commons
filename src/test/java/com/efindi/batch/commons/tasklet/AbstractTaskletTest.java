@@ -1,9 +1,8 @@
 package com.efindi.batch.commons.tasklet;
 
-import com.efindi.batch.commons.function.ImmutableTask;
-import com.efindi.batch.commons.function.Task;
-import com.efindi.batch.commons.function.VoidMethod;
-import com.efindi.batch.commons.function.VoidMethodExecutionException;
+import com.efindi.batch.commons.tasklet.function.VoidMethod;
+import com.efindi.batch.commons.tasklet.function.VoidMethodExecutionException;
+import com.efindi.batch.commons.tasklet.task.Task;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -35,17 +34,15 @@ public abstract class AbstractTaskletTest {
 
         Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
         Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
-        runnableTask = ImmutableTask.of(() -> {});
-        voidMethodTask = ImmutableTask.of(() -> null);
-        voidMethodTaskWithException = ImmutableTask
-                .of(() -> {throw new VoidMethodExecutionException("Throwing VoidMethodExecutionException");});
+        runnableTask = Task.of(() -> {});
+        voidMethodTask = Task.of(() -> null);
+        voidMethodTaskWithException = Task.of(() -> {
+            throw new VoidMethodExecutionException("Throwing VoidMethodExecutionException");
+        });
+
     }
 
-    abstract void taskletRunnableHasOneTask();
-    abstract void taskletVoidMethodHasOneTask();
-    abstract void taskletRunnableHasFiveTask();
-    abstract void taskletVoidMethodHasFiveTask();
-    abstract void taskletVoidMethodWillThrowVoidMethodExecutionException();
-    abstract void taskletShouldRunSuccessfully();
-
+    abstract void runnableTaskletShouldRunSuccessfully();
+    abstract void voidMethodTaskletShouldRunSuccessfully();
+    abstract void voidMethodTaskletWillThrowVoidMethodExecutionException();
 }
