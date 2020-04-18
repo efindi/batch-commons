@@ -16,33 +16,32 @@ import org.springframework.batch.core.scope.context.StepContext;
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractTaskletTest {
 
-    @Mock
-    protected StepContribution contribution;
+  protected static Task<Runnable> runnableTask;
+  protected static Task<VoidMethod> voidMethodTask;
+  protected static Task<VoidMethod> voidMethodTaskWithException;
+  @Mock protected StepContribution contribution;
+  @Mock protected ChunkContext chunkContext;
 
-    @Mock
-    protected ChunkContext chunkContext;
+  @BeforeAll
+  static void initAll() {
+    StepExecution stepExecution = Mockito.mock(StepExecution.class);
+    StepContext stepContext = Mockito.mock(StepContext.class);
+    ChunkContext chunkContext = Mockito.mock(ChunkContext.class);
 
-    static Task<Runnable> runnableTask;
-    static Task<VoidMethod> voidMethodTask;
-    static Task<VoidMethod> voidMethodTaskWithException;
+    Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
+    Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
+    runnableTask = Task.of(() -> {});
+    voidMethodTask = Task.of((stepContribution, stepChunkContext) -> {});
+    voidMethodTaskWithException =
+        Task.of(
+            (stepContribution, stepChunkContext) -> {
+              throw new VoidMethodExecutionException("Test Throwing VoidMethodExecutionException");
+            });
+  }
 
-    @BeforeAll
-    static void initAll() {
-        StepExecution stepExecution = Mockito.mock(StepExecution.class);
-        StepContext stepContext = Mockito.mock(StepContext.class);
-        ChunkContext chunkContext = Mockito.mock(ChunkContext.class);
+  abstract void runnableTaskletShouldRunSuccessfully();
 
-        Mockito.when(chunkContext.getStepContext()).thenReturn(stepContext);
-        Mockito.when(stepContext.getStepExecution()).thenReturn(stepExecution);
-        runnableTask = Task.of(() -> {});
-        voidMethodTask = Task.of(() -> null);
-        voidMethodTaskWithException = Task.of(() -> {
-            throw new VoidMethodExecutionException("Test Throwing VoidMethodExecutionException");
-        });
+  abstract void voidMethodTaskletShouldRunSuccessfully();
 
-    }
-
-    abstract void runnableTaskletShouldRunSuccessfully();
-    abstract void voidMethodTaskletShouldRunSuccessfully();
-    abstract void voidMethodTaskletWillThrowVoidMethodExecutionException();
+  abstract void voidMethodTaskletWillThrowVoidMethodExecutionException();
 }

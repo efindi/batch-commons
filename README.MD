@@ -1,39 +1,39 @@
 # Efindi Batch Commons
 [![Codeship Status for efindi/batch-commons](https://app.codeship.com/projects/ea3b8a50-2991-0137-a5f8-1edb361fe982/status?branch=master)](https://app.codeship.com/projects/331016)
 
-Batch Commons for Spring Batch 4.1.x
+Batch Commons for Spring Batch 4.2.x
 
 #### Maven
 ```xml
 <dependency>
   <groupId>com.efindi</groupId>
   <artifactId>batch-commons</artifactId>
-  <version>0.0.2-RELEASE</version>
+  <version>0.0.3-RELEASE</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-implementation 'com.efindi:batch-commons:0.0.2-RELEASE'
+implementation 'com.efindi:batch-commons:0.0.3-RELEASE'
 ```
 #### Features:
-Tasklet enhancement to improve task chaining
+* Tasklet enhancements to improve task chaining
+* ListReader and ListWriter
 
 ##### Task
 ```java
-Task<Runnable> runnableTask = Task.of(() -> {}); // Any Runnable method
-Task<VoidMethod> voidMethodTask = Task.of(() -> null) // Any Void method
+  Task<Runnable> runnableTask = Task.of(() -> {}); // Any Runnable method
+  Task<VoidMethod> voidMethodTask = Task.of((stepContribution, chunkContext) -> {}) // Any Void method
 
-public VoidMethod doSomethingVoidMethod() {
-    return () -> {
-        try {
-            doSomething()
-        } catch (Exception e) {
-            log.error("Log your error", e);
-            throw new VoidMethodExecutionException(e); // re-throw it using the wrapper exception if needed
-        }
-        return null;
-    };
-}
+  public Task<VoidMethod> voidMethodTask() {
+    return Task.of((stepContribution, chunkContext) -> {
+      try {
+        doSomething();
+      } catch (Exception e) {
+        log.error("Log your error", e);
+        throw new VoidMethodExecutionException(e); // re-throw it using the wrapper exception if needed
+      }
+    });
+  }
 
 ```
 
@@ -79,6 +79,23 @@ ParallelStreamTasklet
 // Shorthand, using default configuration.
 ParallelStreamTasklet.of(List.of(voidMethodTask));
 ```
+##### ListReader and ListWriter
+Allow reading and writing List with ItemStream support.
+* ItemReader takes an ItemReader delegate and a chunk size.
+    * The step's chunk size becomes the multiplier of the ListReader's chunk size. 
+* ListWriter takes an ItemWriter delegate. 
+```java
+  @Bean
+  public Step step1() {
+    return stepBuilderFactory
+        .get("step1")
+        .<List<Integer>, List<Integer>>chunk(1)
+        .reader(new ListReader<>(new IntegerItemReader(), 10))
+        .writer(new ListWriter<>(new IntegerItemWriter()))
+        .build();
+  }
+
+```
 
 ## Open-source dependencies:
 * [spring-batch] - Spring Batch is a framework for writing offline and batch applications using Spring and Java http://projects.spring.io/spring-batch/
@@ -90,5 +107,5 @@ The Apache License, Version 2.0
 
 https://www.apache.org/licenses/LICENSE-2.0
 
-   [spring-batch]: <https://github.com/spring-projects/spring-batch/tree/4.1.x>
-   [immutables]: <https://github.com/immutables/immutables/tree/immutables-2.7.4>
+   [spring-batch]: <https://github.com/spring-projects/spring-batch/tree/4.2.x>
+   [immutables]: <https://github.com/immutables/immutables/tree/immutables-2.8.2>
