@@ -2,20 +2,19 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "signing"
-    id "io.codearte.nexus-staging" version "0.20.0"
+    id "io.codearte.nexus-staging" version "0.21.2"
     id "idea"
-    id "net.ltgt.apt-idea" version "0.21"
 }
 
-ext.springBatchVersion = "4.1.1.RELEASE"
-ext.immutableVersion = "2.7.4"
+ext.springBatchVersion = "4.2.2.RELEASE"
+ext.immutableVersion = "2.8.2"
 ext.junitVersion = "5.4.1"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group "com.efindi"
-version "0.0.2-RELEASE"
+version "0.0.3-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -29,7 +28,6 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.mockito:mockito-junit-jupiter:2.25.0"
-    testImplementation "io.vavr:vavr:0.9.3"
 }
 
 jar {
