@@ -6,5 +6,5 @@ import org.immutables.value.Value;
 @Value.Immutable
 @OfStyle
 public interface ITask<T> {
-    T task() throws RuntimeException;
+  T task() throws RuntimeException;
 }
