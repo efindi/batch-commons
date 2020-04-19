@@ -1,5 +1,5 @@
 # Efindi Batch Commons
-[![Codeship Status for efindi/batch-commons](https://app.codeship.com/projects/ea3b8a50-2991-0137-a5f8-1edb361fe982/status?branch=master)](https://app.codeship.com/projects/331016)
+[![Codeship Status for efindi/batch-commons](https://app.codeship.com/projects/9a99e470-641d-0138-8184-0a886b49fc4e/status?branch=master)](https://app.codeship.com/projects/393299)
 
 Batch Commons for Spring Batch 4.2.x
 
