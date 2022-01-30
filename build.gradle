@@ -2,19 +2,19 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "signing"
-    id "io.codearte.nexus-staging" version "0.21.2"
+    id 'io.codearte.nexus-staging' version '0.30.0'
     id "idea"
 }
 
-ext.springBatchVersion = "4.2.2.RELEASE"
-ext.immutableVersion = "2.8.2"
-ext.junitVersion = "5.4.1"
+ext.springBatchVersion = "4.3.4"
+ext.immutableVersion = "2.9.0"
+ext.junitVersion = "5.8.2"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group "com.efindi"
-version "0.0.3-RELEASE"
+version "0.0.4"
 
 repositories {
     mavenCentral()
@@ -33,7 +33,7 @@ dependencies {
 jar {
     def vendor = "efindi"
     String[] packageArr = ["com", "efindi", "batch", "commons"]
-    from("LICENSE-2.0.txt") {
+    from("LICENSE") {
         into("META-INF")
     }
     manifest {
@@ -88,7 +88,7 @@ publishing {
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        url = "http://www.apache.org/licenses/LICENSE"
                     }
                 }
                 developers {

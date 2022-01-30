@@ -97,13 +97,13 @@ class SequentialTaskletTest extends AbstractListTaskletTest {
   }
 
   @Test
-  void sequentialTaskletWithFiveEmptyTasksAnd10msPauseShouldBeCompletedBefore60ms() {
+  void sequentialTaskletWithFiveEmptyTasksAnd10msPauseShouldBeCompletedBefore100ms() {
     SequentialTasklet<VoidMethod> tasklet =
         SequentialTasklet.<VoidMethod>builder()
             .pause(10)
             .addTasks(
                 voidMethodTask, voidMethodTask, voidMethodTask, voidMethodTask, voidMethodTask)
             .build();
-    assertTimeoutPreemptively(ofMillis(60), () -> tasklet.execute(contribution, chunkContext));
+    assertTimeoutPreemptively(ofMillis(100), () -> tasklet.execute(contribution, chunkContext));
   }
 }

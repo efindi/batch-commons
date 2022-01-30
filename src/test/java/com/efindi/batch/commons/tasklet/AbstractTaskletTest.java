@@ -19,8 +19,10 @@ public abstract class AbstractTaskletTest {
   protected static Task<Runnable> runnableTask;
   protected static Task<VoidMethod> voidMethodTask;
   protected static Task<VoidMethod> voidMethodTaskWithException;
-  @Mock protected StepContribution contribution;
-  @Mock protected ChunkContext chunkContext;
+  @Mock
+  protected StepContribution contribution;
+  @Mock
+  protected ChunkContext chunkContext;
 
   @BeforeAll
   static void initAll() {
@@ -33,10 +35,9 @@ public abstract class AbstractTaskletTest {
     runnableTask = Task.of(() -> {});
     voidMethodTask = Task.of((stepContribution, stepChunkContext) -> {});
     voidMethodTaskWithException =
-        Task.of(
-            (stepContribution, stepChunkContext) -> {
-              throw new VoidMethodExecutionException("Test Throwing VoidMethodExecutionException");
-            });
+        Task.of((stepContribution, stepChunkContext) -> {
+          throw new VoidMethodExecutionException("Test Throwing VoidMethodExecutionException");
+        });
   }
 
   abstract void runnableTaskletShouldRunSuccessfully();

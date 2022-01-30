@@ -4,6 +4,7 @@ import com.efindi.batch.commons.style.DefaultStyle;
 import com.efindi.batch.commons.tasklet.function.VoidMethodExecutionException;
 import com.efindi.batch.commons.tasklet.task.ITask;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.immutables.value.Value;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -34,7 +35,7 @@ public abstract class AbstractSequentialTasklet<T> extends AbstractExecutionTask
                 task -> {
                   try {
                     this.run(task, contribution, chunkContext);
-                    Thread.sleep(pause());
+                    TimeUnit.MILLISECONDS.sleep(pause());
                   } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                   }

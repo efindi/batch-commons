@@ -1,19 +1,18 @@
-# Efindi Batch Commons
-[![Codeship Status for efindi/batch-commons](https://app.codeship.com/projects/9a99e470-641d-0138-8184-0a886b49fc4e/status?branch=master)](https://app.codeship.com/projects/393299)
-
-Batch Commons for Spring Batch 4.2.x
+# Batch Commons
+[![Build Status](https://app.travis-ci.com/efindi/batch-commons.svg?branch=master)](https://app.travis-ci.com/efindi/batch-commons)
+![GitHub](https://img.shields.io/github/license/efindi/batch-commons)
 
 #### Maven
 ```xml
 <dependency>
   <groupId>com.efindi</groupId>
   <artifactId>batch-commons</artifactId>
-  <version>0.0.3-RELEASE</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-implementation 'com.efindi:batch-commons:0.0.3-RELEASE'
+implementation 'com.efindi:batch-commons:0.0.4'
 ```
 #### Features:
 * Tasklet enhancements to improve task chaining
@@ -97,15 +96,6 @@ Allow reading and writing List with ItemStream support.
 
 ```
 
-## Open-source dependencies:
-* [spring-batch] - Spring Batch is a framework for writing offline and batch applications using Spring and Java http://projects.spring.io/spring-batch/
-* [immutables] - Annotation processor to create immutable objects and builders. Feels like Guava's immutable collections but for regular value objects. JSON, Jackson, Gson, JAX-RS integrations included http://immutables.org
-    
-License
-----
-The Apache License, Version 2.0
-
-https://www.apache.org/licenses/LICENSE-2.0
-
-   [spring-batch]: <https://github.com/spring-projects/spring-batch/tree/4.2.x>
-   [immutables]: <https://github.com/immutables/immutables/tree/immutables-2.8.2>
+### Open-source dependencies:
+* [spring-batch](https://spring.io/projects/spring-batch)
+* [immutables](http://immutables.github.io/)
